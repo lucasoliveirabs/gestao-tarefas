@@ -16,3 +16,9 @@ def criar_tarefa():
     postgres_db.session.add(nova_tarefa)
     postgres_db.session.commit()
     return jsonify(nova_tarefa.to_dict()), 201
+
+@tarefas.route('/tarefas', methods=['GET'])
+def listar_tarefas():
+    data = postgres_db.session.query(Tarefa).all()
+    return jsonify([tarefa.to_dict() for tarefa in data]), 200
+    

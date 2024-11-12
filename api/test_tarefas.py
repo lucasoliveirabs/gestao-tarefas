@@ -2,7 +2,7 @@ import pytest, os
 from flask import Flask
 from flask_migrate import Migrate
 from .routes import tarefas as tarefas_blueprint
-from .models import postgres_db, Tarefa
+from .models import postgres_db
 
 @pytest.fixture
 def client():
@@ -16,16 +16,13 @@ def client():
     Migrate().init_app(app, postgres_db)
 
     with app.app_context():
-        postgres_db.create_all()  # Cria as tabelas no banco de dados
+        postgres_db.create_all()
 
-    # Criando o cliente de teste
     with app.test_client() as client:
-        yield client  # O cliente é fornecido para os testes
+        yield client
 
-    # Limpeza do banco após os testes
     with app.app_context():
-        postgres_db.drop_all()  # Remove as tabelas do banco de dados
-            
+        postgres_db.drop_all()  
         
 def test_criar_tarefa(client):
     response = client.post('/tarefas', json = {"titulo": "Titulo Teste 1", "descricao": "Descricao Teste 1"})
@@ -52,3 +49,11 @@ def test_criar_tarefa_descricao_vazio(client):
     response = client.post('/tarefas', json = {"titulo": "Titulo Teste 1","descricao": ""})
     assert response.status_code == 400
     assert response.json == {"error": "Título e descrição são obrigatórios"}
+    
+def test_listar_tarefas(client):
+    response = client.get('/tarefas')
+    assert response.status_code == 200
+    assert isinstance(response.json, list)
+    for tarefa in response.json:
+        assert 'titulo' in tarefa
+        assert 'descricao' in tarefa
