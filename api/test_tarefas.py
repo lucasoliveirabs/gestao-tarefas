@@ -57,3 +57,22 @@ def test_listar_tarefas(client):
     for tarefa in response.json:
         assert 'titulo' in tarefa
         assert 'descricao' in tarefa
+
+def test_alterar_tarefa(client):
+    nova_tarefa = {
+        "titulo": "Titulo teste 0",
+        "descricao": "Descrição teste 0"
+    }
+    response = client.post('/tarefas', json=nova_tarefa)
+    assert response.status_code == 201
+    tarefa_id = response.json['id']  
+    
+    dados_atualizados = {
+        "id": tarefa_id,
+        "titulo": "Titulo teste 1",
+        "descricao": "Descrição teste 1"
+    }
+    response = client.patch('/tarefas', json=dados_atualizados)
+    assert response.status_code == 200
+    assert response.json['titulo'] == "Titulo teste 1"
+    assert response.json['descricao'] == "Descrição teste 1"

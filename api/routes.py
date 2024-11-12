@@ -25,6 +25,16 @@ def listar_tarefas():
 @tarefas.route('/tarefas', methods=['PATCH'])
 def alterar_tarefa():
     data = request.get_json()
-    titulo = data.get('titulo')
-    descricao = data.get('descricao')
-    nova_tarefa = Tarefa(titulo=titulo, descricao=descricao)
+    tarefa_id = data.get('id')
+    tarefa = postgres_db.session.get(Tarefa, tarefa_id)  
+
+    if not tarefa:
+        return jsonify({"error": "Tarefa não encontrada"}), 404 
+    
+    if 'titulo' in data and data['titulo']:
+        tarefa.titulo = data['titulo']
+    if 'descricao' in data and data['descricao']:
+        tarefa.descricao = data['descricao']
+        
+    postgres_db.session.commit()
+    return jsonify(tarefa.to_dict()), 200
