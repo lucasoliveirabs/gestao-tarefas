@@ -76,3 +76,18 @@ def test_alterar_tarefa(client):
     assert response.status_code == 200
     assert response.json['titulo'] == "Titulo teste 1"
     assert response.json['descricao'] == "Descrição teste 1"
+    
+    import pytest
+
+def test_excluir_tarefa(client):
+    nova_tarefa = {
+        "titulo": "Tarefa para Deletar",
+        "descricao": "Descrição da Tarefa para Deletar"
+    }
+    response = client.post('/tarefas', json=nova_tarefa)
+    assert response.status_code == 201
+    tarefa_id = response.json['id']  
+    
+    response = client.delete('/tarefas', json={"id": tarefa_id})
+    assert response.status_code == 200 
+    assert response.json['id'] == tarefa_id  

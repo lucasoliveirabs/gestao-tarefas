@@ -38,3 +38,16 @@ def alterar_tarefa():
         
     postgres_db.session.commit()
     return jsonify(tarefa.to_dict()), 200
+
+@tarefas.route('/tarefas', methods=['DELETE'])
+def excluir_tarefa():
+    data = request.get_json()
+    tarefa_id = data.get('id')
+    tarefa = postgres_db.session.get(Tarefa, tarefa_id)  
+    if not tarefa:
+        return jsonify({"error": "Tarefa não encontrada"}), 404  # Retorna erro se a tarefa não existir
+
+    postgres_db.session.delete(tarefa) 
+    postgres_db.session.commit() 
+
+    return jsonify(tarefa.to_dict()), 200 
