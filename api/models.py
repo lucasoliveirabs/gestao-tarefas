@@ -14,7 +14,7 @@ class Tarefa(postgres_db.Model):
     data_criacao = postgres_db.Column(postgres_db.DateTime, default=datetime.now(brt_timezone))
     data_exclusao = postgres_db.Column(postgres_db.DateTime, nullable=True)
 
-    def serialize(self):
+    def to_dict(self):
         return {
             "id": self.id,
             "titulo": self.titulo,
