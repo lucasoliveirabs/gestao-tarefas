@@ -1,8 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone, timedelta
+from .db import postgres_db
 import uuid
 
-postgres_db = SQLAlchemy()
 brt_timezone = timezone(timedelta(hours=-3))
 
 class Tarefa(postgres_db.Model):

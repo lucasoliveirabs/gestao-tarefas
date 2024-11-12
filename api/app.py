@@ -1,19 +1,19 @@
 from flask import Flask
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
+from .db import postgres_db
 import os 
 from .routes import tarefas as tarefas_blueprint
 
-postgres_db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    app.register_blueprint(tarefas_blueprint)
     
     configure_app(app)
     initialize_postgres(app)    
+    
     migrate.init_app(app, postgres_db)
+    app.register_blueprint(tarefas_blueprint)
     
     with app.app_context():
         postgres_db.create_all()

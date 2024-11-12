@@ -22,3 +22,9 @@ def listar_tarefas():
     data = postgres_db.session.query(Tarefa).all()
     return jsonify([tarefa.to_dict() for tarefa in data]), 200
     
+@tarefas.route('/tarefas', methods=['PATCH'])
+def alterar_tarefa():
+    data = request.get_json()
+    titulo = data.get('titulo')
+    descricao = data.get('descricao')
+    nova_tarefa = Tarefa(titulo=titulo, descricao=descricao)
