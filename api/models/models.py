@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from .db import postgres_db
+from api.db import postgres_db
 import uuid
 
 brt_timezone = timezone(timedelta(hours=-3))

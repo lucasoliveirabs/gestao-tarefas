@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from datetime import datetime, timezone, timedelta
-from .models import postgres_db, Tarefa
+from api.models import postgres_db, Tarefa
 
 brt_timezone = timezone(timedelta(hours=-3))
 tarefas = Blueprint('tarefas', __name__)

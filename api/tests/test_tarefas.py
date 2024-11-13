@@ -1,8 +1,8 @@
 import pytest, os
 from flask import Flask
 from flask_migrate import Migrate
-from .routes import tarefas as tarefas_blueprint
-from .models import postgres_db
+from api.routes import tarefas as tarefas_blueprint
+from api.models import postgres_db
 
 @pytest.fixture
 def client():
