@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from datetime import datetime, timezone, timedelta
-from api.models import postgres_db, Tarefa
+from api.models.models import postgres_db, Tarefa
 
 brt_timezone = timezone(timedelta(hours=-3))
 tarefas = Blueprint('tarefas', __name__)
@@ -23,8 +23,8 @@ def listar_tarefas():
     status = request.args.get('status')  
     query = postgres_db.session.query(Tarefa)
     
-    if status == 'incompleto':
-        query = query.filter(Tarefa.concluido == False)
+    if status == 'concluidas':
+        query = query.filter(Tarefa.concluida == True)
         
     data = query.all()
     return jsonify([tarefa.to_dict() for tarefa in data]), 200

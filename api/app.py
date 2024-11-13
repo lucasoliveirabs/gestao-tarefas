@@ -2,7 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from .db import postgres_db
 import os 
-from .routes import tarefas as tarefas_blueprint
+from api.routes.routes import tarefas as tarefas_blueprint
 
 migrate = Migrate()
 
