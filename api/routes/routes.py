@@ -16,6 +16,7 @@ def criar_tarefa():
     nova_tarefa = Tarefa(titulo=titulo, descricao=descricao)
     postgres_db.session.add(nova_tarefa)
     postgres_db.session.commit()
+    
     return jsonify(nova_tarefa.to_dict()), 201
 
 @tarefas.route('/tarefas', methods=['GET'])
@@ -23,12 +24,12 @@ def listar_tarefas():
     status = request.args.get('status')  
     query = postgres_db.session.query(Tarefa)
     
-    if status == 'concluidas':
-        query = query.filter(Tarefa.concluida == True)
+    if status == 'incompletas':
+        query = query.filter(Tarefa.concluida == False)
         
     data = query.all()
     return jsonify([tarefa.to_dict() for tarefa in data]), 200
-    
+
 @tarefas.route('/tarefas', methods=['PATCH'])
 def alterar_tarefa():
     data = request.get_json()
@@ -44,13 +45,13 @@ def alterar_tarefa():
     if 'descricao' in data and data['descricao']:
         tarefa.descricao = data['descricao']
     
-    if 'concluido' in data:
-        tarefa.concluido = data['concluido']
-        tarefa.momento_conclusao = datetime.now(brt_timezone) if tarefa.concluido else None
-
+    if 'concluida' in data:
+        tarefa.concluida = data['concluida']
+        tarefa.momento_conclusao = datetime.now(brt_timezone) if tarefa.concluida else None
+    
     postgres_db.session.commit()
     return jsonify(tarefa.to_dict()), 200
-
+    
 @tarefas.route('/tarefas', methods=['DELETE'])
 def excluir_tarefa():
     data = request.get_json()
@@ -61,6 +62,4 @@ def excluir_tarefa():
 
     postgres_db.session.delete(tarefa) 
     postgres_db.session.commit() 
-
     return jsonify(tarefa.to_dict()), 200 
-

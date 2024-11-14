@@ -162,5 +162,5 @@ cython_debug/
 #.idea/
 
 # virtual environments
-/api_venv/
-/cli_venv/
+api_venv/
+cli_venv/

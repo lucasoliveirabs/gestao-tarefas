@@ -1,14 +1,17 @@
 from flask import Flask
 from flask_migrate import Migrate
 from .db import postgres_db
-import os 
 from api.routes.routes import tarefas as tarefas_blueprint
+from dotenv import load_dotenv
+import os 
 
 migrate = Migrate()
 
 def create_app():
+    if os.getenv("FLASK_ENV") == "development":
+        load_dotenv()
+        
     app = Flask(__name__)
-    
     configure_app(app)
     initialize_postgres(app)    
     
@@ -22,6 +25,7 @@ def create_app():
 def configure_app(_app):    
     _app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('POSTGRES_URI')
     _app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    #_app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
     
 def initialize_postgres(_app):
     postgres_db.init_app(_app)
@@ -29,3 +33,4 @@ def initialize_postgres(_app):
 if __name__ == '__main__':
     app = create_app()
     app.run()
+    
