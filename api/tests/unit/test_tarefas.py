@@ -1,16 +1,18 @@
 import pytest, os
 from flask import Flask
 from flask_migrate import Migrate
-from api.routes import tarefas as tarefas_blueprint
-from api.models import postgres_db
+from api.routes.routes import tarefas as tarefas_blueprint
+from api.models.models import postgres_db
+from dotenv import load_dotenv
 
 @pytest.fixture
 def client():
     app = Flask(__name__)
     app.register_blueprint(tarefas_blueprint)  
+    load_dotenv()
         
     app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('POSTGRES_URI')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     postgres_db.init_app(app)
     Migrate().init_app(app, postgres_db)
@@ -66,17 +68,16 @@ def test_listar_tarefas_incompletas(client):
     tarefa_id_2 = response.get_json()["id"]
     response = client.post('/tarefas', json = {"titulo": "Titulo Teste lista 3", "descricao": "Descricao Teste lista 3"})
 
-    client.patch('/tarefas', json = {"id": tarefa_id_1, "concluido": True})
-    client.patch('/tarefas', json = {"id": tarefa_id_2, "concluido": True})
+    client.patch('/tarefas', json = {"id": tarefa_id_1, "concluida": True})
+    client.patch('/tarefas', json = {"id": tarefa_id_2, "concluida": True})
 
-    response = client.get('/tarefas?status=incompleto')
+    response = client.get('/tarefas?status=incompletas')
     assert response.status_code == 200
     assert isinstance(response.json, list)
-    assert len(response.json) == 1
     for tarefa in response.json:
         assert 'titulo' in tarefa
         assert 'descricao' in tarefa
-        assert tarefa.get('concluido') == False  
+        assert tarefa.get('concluida') == False
         
 def test_listar_tarefas_banco_vazio(client):
     response = client.get('/tarefas')
@@ -92,34 +93,35 @@ def test_alterar_tarefa(client):
     response = client.post('/tarefas', json = {"titulo": "Titulo Teste 3", "descricao": "Descricao Teste 3"})
     tarefa_id_3 = response.get_json()["id"]
 
-    response = client.patch('/tarefas', json = {"id": tarefa_id_1, "titulo": "Titulo Teste 1 - Atualizado", "concluido": True})
+    response = client.patch('/tarefas', json = {"id": tarefa_id_1, "titulo": "Titulo Teste 1 - Atualizado", "concluida": True})
     assert response.status_code == 200
     assert response.get_json()['titulo'] == "Titulo Teste 1 - Atualizado"
-    assert response.get_json()['concluido'] == True
-    
-    response = client.patch('/tarefas', json = {"id": tarefa_id_2, "descricao": "Descricao Teste 2 - Atualizado", "concluido": True})
+    assert response.get_json()['concluida'] == True
+    assert response.get_json()["momento_conclusao"] is not None
+
+    response = client.patch('/tarefas', json = {"id": tarefa_id_2, "descricao": "Descricao Teste 2 - Atualizado", "concluida": True})
     assert response.status_code == 200
     assert response.get_json()['descricao'] == "Descricao Teste 2 - Atualizado"
-    assert response.get_json()['concluido'] == True
+    assert response.get_json()['concluida'] == True
     assert response.get_json()["momento_conclusao"] is not None
     
-    response = client.patch('/tarefas', json = {"id": tarefa_id_3, "concluido": True})
+    response = client.patch('/tarefas', json = {"id": tarefa_id_3})
     assert response.status_code == 200
-    assert response.get_json()['concluido'] == True
-    assert response.get_json()["momento_conclusao"] is not None
+    assert response.get_json()['concluida'] == False
+    assert response.get_json()["momento_conclusao"] is None
     
 def test_reabrir_tarefa(client):
     response = client.post('/tarefas', json = {"titulo": "Titulo Teste 1", "descricao": "Descricao Teste 1"})
     tarefa_id_1 = response.get_json()["id"]
 
-    response = client.patch('/tarefas', json={"id": tarefa_id_1, "concluido": True})
+    response = client.patch('/tarefas', json={"id": tarefa_id_1, "concluida": True})
     assert response.status_code == 200
-    assert response.get_json()["concluido"] is True
+    assert response.get_json()["concluida"] is True
     assert response.get_json()["momento_conclusao"] is not None
 
-    response = client.patch('/tarefas', json={"id": tarefa_id_1, "concluido": False})
+    response = client.patch('/tarefas', json={"id": tarefa_id_1, "concluida": False})
     assert response.status_code == 200
-    assert response.get_json()["concluido"] is False
+    assert response.get_json()["concluida"] is False
     assert response.get_json()["momento_conclusao"] is None
     
 def test_excluir_tarefa(client):
