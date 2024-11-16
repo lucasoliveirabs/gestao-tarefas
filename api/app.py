@@ -2,7 +2,6 @@ from flask import Flask
 from flask_migrate import Migrate
 from .db import postgres_db
 from api.routes.routes import tarefas as tarefas_blueprint
-from dotenv import load_dotenv
 import os 
 
 migrate = Migrate()
@@ -30,4 +29,3 @@ def initialize_postgres(_app):
 if __name__ == '__main__':
     app = create_app()
     app.run()
-    
