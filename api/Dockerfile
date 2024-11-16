@@ -11,4 +11,4 @@ COPY ./tests /app/tests
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "flask db upgrade && flask run --host=0.0.0.0"]
+CMD ["sh", "-c", "cd api && flask db upgrade && flask run --host=0.0.0.0"]
