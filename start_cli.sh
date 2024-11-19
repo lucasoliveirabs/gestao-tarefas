@@ -1,5 +1,4 @@
 #!/bin/bash
-# Arquivo: start_cli.sh
 
 docker-compose -p gestao-tarefas ps | grep -q "gestao-tarefas_db_1.*Up"
 db_status=$?
@@ -13,6 +12,5 @@ else
   echo "Serviços principais já estão em execução."
 fi
 
-echo "Efetivando mudanças de banco de dados com 'flask db upgrade'"
-docker-compose exec web sh -c "cd api && flask db upgrade"
+docker-compose exec web sh -c "flask db upgrade"
 docker-compose -p gestao-tarefas run --entrypoint "" cli bash
