@@ -13,8 +13,8 @@ def cli():
     click.echo("")
     click.echo("  listar                -> Lista todas as tarefas")
     click.echo("  criar --titulo ...    -> Cria uma nova tarefa com o título especificado")
-    click.echo("  alterar --id ...      -> Altera uma tarefa existente")
-    click.echo("  excluir --id ...      -> Exclui uma tarefa")
+    click.echo("  alterar --uuid ...    -> Altera uma tarefa existente")
+    click.echo("  excluir --uuid ...    -> Exclui uma tarefa")
     click.echo("===============================================")
     click.echo("")
 

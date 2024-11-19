@@ -1,13 +1,19 @@
 from datetime import datetime, timezone, timedelta
 from api.db import postgres_db
-import uuid
+from uuid import uuid4
 
 brt_timezone = timezone(timedelta(hours=-3))
 
 class Tarefa(postgres_db.Model):
     __tablename__ = 'tarefas'
     
-    id = postgres_db.Column(postgres_db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    uuid = postgres_db.Column(
+        postgres_db.UUID(as_uuid=True), 
+        primary_key=True, 
+        unique=True, 
+        nullable=False, 
+        default=uuid4  
+    )    
     titulo = postgres_db.Column(postgres_db.String(120), nullable=False)
     descricao = postgres_db.Column(postgres_db.String(255), nullable=False)
     concluida = postgres_db.Column(postgres_db.Boolean, default=False)
@@ -16,7 +22,7 @@ class Tarefa(postgres_db.Model):
 
     def to_dict(self):
         return {
-            "id": self.id,
+            "uuid": str(self.uuid),
             "titulo": self.titulo,
             "descricao": self.descricao,
             "concluida": self.concluida,
