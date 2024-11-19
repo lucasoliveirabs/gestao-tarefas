@@ -4,7 +4,6 @@ from flask_migrate import Migrate
 from api.models.models import postgres_db
 from api.routes.routes import api as tarefas_namespace
 from flask_restx import Api
-from uuid import uuid4
 
 
 @pytest.fixture

@@ -66,7 +66,7 @@ A solução conteinerizada foi projetada considerando o contexto de um ambiente 
     Com expansão de componentes, para ambientes além do desenvolvimento ou para situações que precisem de integração com DNS externoa, recomendamos o uso de certificados emitidos por Autoridades Certificadoras. Considerando a construção de uma pipeline CI/CD, sugerimos os certificados [gerenciados em nuvem](https://aws.amazon.com/pt/certificate-manager/);
   - CORS: Atualmente, se tratando de uma solução interna e com conexão CLI-API já tratada via certificado SSL, CORS não se faz estritamente necessário.
     Com expansão de componentes, para ambientes além do desenvolvimento ou sobretudo casos que precisem de integração com origens externas e conexão com internet, recomendamos atualização da configuração do [CORS](https://flask-cors.readthedocs.io/en/v1.1/);
-  - API Key: Novamente considerando o contexto da solução, no momento a adoção de API Keys para melhoria de segurança e controle de acesso aos endpoints se faz suficiente. Exportamos as variáveis de ambiente no script de inicialização `start_project.sh` e habilitamos acesso CLI-API, reforçando segurança SSL.
+  - API Key: Novamente considerando o contexto da solução, no momento a adoção de API Keys para melhoria de segurança e controle de acesso aos endpoints se faz suficiente. Habilitamos acesso CLI-API, reforçando segurança SSL.
     JWT e Oauth2 se mostram opções importantes na expansão e/ou abertura à outros componentes internos ou externos. Nesse caso é interessante configurar as variáveis na pipeline;
   - [Flask-RESTx](https://flask-restx.readthedocs.io/en/latest/): Extensão adotada na construção da API RESTful. Ao priorizar segurança e documentação, fornece serialização automatizada, decorators para definição de autenticação por endpoint ou por namespace, swagger integrado, validação de inputs e tratamento automático de erros em função de model específico por endpoint;
 
@@ -77,6 +77,12 @@ A solução conteinerizada foi projetada considerando o contexto de um ambiente 
 - **Dependências**: Todas as dependências necessárias estão contidas nos containers Docker. Não se faz necessário configurar um ambiente Python local;
 
 - **Variáveis de ambiente**: Todas as variáveis de ambiente necessárias estão contidas no arquivo docker-compose.yml. Não se faz necessário configurar `.env`
+
+---
+
+#### DEMO:
+
+## [demo video](https://drive.google.com/drive/folders/1auIZG1Rj4aElOhSThU_8LH0otNbB42qG?usp=sharing)
 
 #### Sugestão pessoal:
 
